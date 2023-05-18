@@ -15,7 +15,7 @@ jobs:
 
     env:
         APP_ENV: 'dev'
-        STACK_NAME: 'lambda-webhook'
+        STACK_NAME: 'lambda-web'
 
     steps:
     - name: Checkout code
