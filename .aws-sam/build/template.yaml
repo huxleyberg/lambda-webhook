@@ -25,11 +25,17 @@ Resources:
             Method: POST
     Metadata:
       SamResourceId: SupportUserCreatedFunction
-  ApiGatewayDeployment:
+  MyDeployment:
     Type: AWS::ApiGateway::Deployment
-    DependsOn:
-    - SupportUserCreatedFunction
+    DependsOn: ApiGateway
     Properties:
       RestApiId:
         Ref: ApiGateway
       StageName: dev
+Outputs:
+  ApiEndpoint:
+    Description: Endpoint URL of the API
+    Value:
+      Fn::Sub: https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/zendesk/webhooks/support-user-created
+    Export:
+      Name: MyApiEndpoint
