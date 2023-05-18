@@ -25,3 +25,11 @@ Resources:
             Method: POST
     Metadata:
       SamResourceId: SupportUserCreatedFunction
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+    - SupportUserCreatedFunction
+    Properties:
+      RestApiId:
+        Ref: ApiGateway
+      StageName: dev

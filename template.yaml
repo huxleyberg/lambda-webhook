@@ -23,3 +23,11 @@ Resources:
             RestApiId: !Ref ApiGateway
             Path: /zendesk/webhooks/support-user-created
             Method: POST
+
+  ApiGatewayDeployment:
+      Type: AWS::ApiGateway::Deployment
+      DependsOn:
+        - SupportUserCreatedFunction
+      Properties:
+        RestApiId: !Ref ApiGateway
+        StageName: dev
