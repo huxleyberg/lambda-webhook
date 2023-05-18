@@ -1,6 +1,6 @@
 Transform: AWS::Serverless-2016-10-31
 Resources:
-  ApiGateway:
+  MyApiGateway:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
@@ -20,20 +20,20 @@ Resources:
         SupportUserCreated:
           Type: Api
           Properties:
-            RestApiId: !Ref ApiGateway
+            RestApiId: !Ref MyApiGateway
             Path: /zendesk/webhooks/support-user-created
             Method: POST
 
-  MyDeployment:
-      Type: AWS::ApiGateway::Deployment
-      DependsOn: ApiGateway
-      Properties:
-        RestApiId: !Ref ApiGateway
-        StageName: dev
+  # MyDeployment:
+  #     Type: AWS::ApiGateway::Deployment
+  #     DependsOn: MyApiGateway
+  #     Properties:
+  #       RestApiId: !Ref MyApiGateway
+  #       StageName: dev
 
 Outputs:
   ApiEndpoint:
     Description: Endpoint URL of the API
-    Value: !Sub https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/zendesk/webhooks/support-user-created
+    Value: !Sub https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/zendesk/webhooks/support-user-created
     Export:
       Name: MyApiEndpoint
