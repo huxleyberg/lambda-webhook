@@ -1,4 +1,8 @@
-name: Deploy lambda-wook
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+
+name: lambda deployment
 
 on:
   push:
