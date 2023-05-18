@@ -7,82 +7,107 @@ info:
 paths:
   /zendesk/webhooks/support-user-created:
     post:
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SupportUserCreatedFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       summary: Handle support user created webhook events
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                type:
-                  type: string
-                account_id:
-                  type: integer
-                id:
-                  type: string
-                time:
-                  type: string
-                  format: date-time
-                zendesk_event_version:
-                  type: string
-                subject:
-                  type: string
-                detail:
-                  type: object
-                  properties:
-                    created_at:
-                      type: string
-                      format: date-time
-                    email:
-                      type: string
-                    external_id:
-                      type: string
-                    default_group_id:
-                      type: string
-                    id:
-                      type: string
-                    organization_id:
-                      type: string
-                    role:
-                      type: string
-                    updated_at:
-                      type: string
-                      format: date-time
-                  required:
-                    - created_at
-                    - email
-                    - id
-                    - role
-                    - updated_at
-                event:
-                  type: object
-                  properties:
-                    current:
-                      type: boolean
-                    previous:
-                      type: boolean
-              required:
-                - type
-                - account_id
-                - id
-                - time
-                - zendesk_event_version
-                - subject
-                - detail
-                - event
+              $ref: '#/components/schemas/SupportUserCreatedRequest'
       responses:
         '200':
           description: OK
       security:
         - basicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UsernameHeader'
+        - $ref: '#/components/parameters/PasswordHeader'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SupportUserCreatedFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
 
 securitySchemes:
   basicAuth:
     type: http
     scheme: basic
+
+components:
+  schemas:
+    SupportUserCreatedRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        account_id:
+          type: integer
+        id:
+          type: string
+        time:
+          type: string
+          format: date-time
+        zendesk_event_version:
+          type: string
+        subject:
+          type: string
+        detail:
+          $ref: '#/components/schemas/UserDetail'
+        event:
+          $ref: '#/components/schemas/Event'
+      required:
+        - type
+        - account_id
+        - id
+        - time
+        - zendesk_event_version
+        - subject
+        - detail
+        - event
+    UserDetail:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+        email:
+          type: string
+        external_id:
+          type: string
+        default_group_id:
+          type: string
+        id:
+          type: string
+        organization_id:
+          type: string
+        role:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - created_at
+        - email
+        - id
+        - role
+        - updated_at
+    Event:
+      type: object
+      properties:
+        current:
+          type: boolean
+        previous:
+          type: boolean
+  parameters:
+    UsernameHeader:
+      name: username
+      in: header
+      required: true
+      schema:
+        type: string
+    PasswordHeader:
+      name: password
+      in: header
+      required: true
+      schema:
+        type: string
