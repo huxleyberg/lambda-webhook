@@ -49,15 +49,15 @@ components:
           $ref: '#/components/schemas/UserDetail'
         event:
           $ref: '#/components/schemas/Event'
-      required:
-        - type
-        - account_id
-        - id
-        - time
-        - zendesk_event_version
-        - subject
-        - detail
-        - event
+      # required:
+      #   - type
+      #   - account_id
+      #   - id
+      #   - time
+      #   - zendesk_event_version
+      #   - subject
+      #   - detail
+      #   - event
     UserDetail:
       type: object
       properties:
@@ -79,12 +79,12 @@ components:
         updated_at:
           type: string
           format: date-time
-      required:
-        - created_at
-        - email
-        - id
-        - role
-        - updated_at
+      # required:
+      #   - created_at
+      #   - email
+      #   - id
+      #   - role
+      #   - updated_at
     Event:
       type: object
       properties:
