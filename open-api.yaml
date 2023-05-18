@@ -24,7 +24,8 @@ paths:
         uri:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SupportUserCreatedFunction.Arn}/invocations
         httpMethod: POST
-        type: aws_proxy
+        passthroughBehavior: when_no_match
+        type: aws
 
 components:
   schemas:
