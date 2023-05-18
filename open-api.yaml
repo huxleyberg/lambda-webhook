@@ -17,8 +17,7 @@ paths:
       responses:
         '200':
           description: OK
-      security:
-        - basicAuth: []
+
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
       x-amazon-apigateway-integration:
@@ -26,11 +25,6 @@ paths:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SupportUserCreatedFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
-
-securitySchemes:
-  basicAuth:
-    type: http
-    scheme: basic
 
 components:
   schemas:
@@ -101,6 +95,6 @@ components:
     AuthorizationHeader:
       name: Authorization
       in: header
-      required: true
+      required: false
       schema:
         type: string
