@@ -1,0 +1,25 @@
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: open-api.yaml
+
+  SupportUserCreatedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./cmd/lambda
+      Handler: main
+      Runtime: go1.x
+      Events:
+        SupportUserCreated:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /zendesk/webhooks/support-user-created
+            Method: POST
