@@ -20,8 +20,7 @@ paths:
       security:
         - basicAuth: []
       parameters:
-        - $ref: '#/components/parameters/UsernameHeader'
-        - $ref: '#/components/parameters/PasswordHeader'
+        - $ref: '#/components/parameters/AuthorizationHeader'
       x-amazon-apigateway-integration:
         uri:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SupportUserCreatedFunction.Arn}/invocations
@@ -99,14 +98,8 @@ components:
         previous:
           type: boolean
   parameters:
-    UsernameHeader:
-      name: username
-      in: header
-      required: true
-      schema:
-        type: string
-    PasswordHeader:
-      name: password
+    AuthorizationHeader:
+      name: Authorization
       in: header
       required: true
       schema:
