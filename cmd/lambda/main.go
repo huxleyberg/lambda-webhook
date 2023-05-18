@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -40,21 +39,21 @@ type RequestEvent struct {
 
 func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	// Extract the Basic authentication credentials from the headers
-	username, password, err := extractBasicAuthCredentials(request.Headers)
-	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
-	}
+	// username, password, err := extractBasicAuthCredentials(request.Headers)
+	// if err != nil {
+	// 	return events.APIGatewayProxyResponse{}, err
+	// }
 
-	// Parse the request payload
-	var requestPayload RequestPayload
-	if err := json.Unmarshal([]byte(request.Body), &requestPayload); err != nil {
-		return events.APIGatewayProxyResponse{}, fmt.Errorf("failed to parse request payload: %v", err)
-	}
+	// // Parse the request payload
+	// var requestPayload RequestPayload
+	// if err := json.Unmarshal([]byte(request.Body), &requestPayload); err != nil {
+	// 	return events.APIGatewayProxyResponse{}, fmt.Errorf("failed to parse request payload: %v", err)
+	// }
 
-	// Perform your desired logic with the request payload and authentication credentials
-	fmt.Println("Received request:", requestPayload)
-	fmt.Println("Username:", username)
-	fmt.Println("Password:", password)
+	// // Perform your desired logic with the request payload and authentication credentials
+	// fmt.Println("Received request:", requestPayload)
+	// fmt.Println("Username:", username)
+	// fmt.Println("Password:", password)
 
 	// Return a success response
 	response := events.APIGatewayProxyResponse{
