@@ -27,10 +27,10 @@ jobs:
     - name: setup go
       uses: actions/setup-go@v2
       with:
-        go-version: '1.19'
+        go-version: '1.20'
 
     - name: download dependencies
-      run: go mod tidy -go=1.19
+      run: go mod tidy -go=1.20
 
     - name: Build app with SAM
       run: sam build
