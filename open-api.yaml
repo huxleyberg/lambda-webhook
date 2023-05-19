@@ -47,9 +47,9 @@ components:
     NewPetResponse:
       type: "object"
       properties:
-        pet:
-          $ref: "#/components/schemas/Pet"
-        message:
+        statusCode:
+          type: "integer"
+        body:
           type: "string"
     Pet:
       type: "object"
