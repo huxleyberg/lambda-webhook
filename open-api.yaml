@@ -35,7 +35,7 @@ paths:
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
-        type: "http"
+        type: "aws_proxy"
     options:
       responses:
         "200":
@@ -65,7 +65,7 @@ paths:
         requestTemplates:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
-        type: "mock"
+        type: "aws_proxy"
  
 components:
   schemas:
