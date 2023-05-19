@@ -7,6 +7,6 @@ architecture = "x86_64"
 handler = "main"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["SupportUserCreatedFunction"]
+functions = ["UserFunction"]
 
 [layer_build_definitions]

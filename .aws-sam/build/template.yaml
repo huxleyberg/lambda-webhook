@@ -1,36 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+Description: 'Sample SAM Template for users API with IaC
+
+  '
+Globals:
+  Api:
+    MethodSettings:
+    - ResourcePath: /*
+      HttpMethod: '*'
+      DataTraceEnabled: true
+      LoggingLevel: INFO
+      MetricsEnabled: true
+  Function:
+    Timeout: 360
+    MemorySize: 2048
+    Runtime: go1.x
 Resources:
-  MyApiGateway:
+  UserAPI:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
+      OpenApiVersion: 3.0.1
       DefinitionBody:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
             Location: ../../open-api.yaml
-      MethodSettings:
-      - HttpMethod: '*'
-  SupportUserCreatedFunction:
+      EndpointConfiguration:
+        Type: REGIONAL
+  UserFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: SupportUserCreatedFunction
+      CodeUri: UserFunction
       Handler: main
-      Runtime: go1.x
       Events:
-        SupportUserCreated:
+        AddUser:
           Type: Api
           Properties:
             RestApiId:
-              Ref: MyApiGateway
-            Path: /zendesk/webhooks/support-user-created
-            Method: POST
+              Ref: UserAPI
+            Path: /users
+            Method: post
+        GetUsers:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: UserAPI
+            Path: /users
+            Method: get
     Metadata:
-      SamResourceId: SupportUserCreatedFunction
+      SamResourceId: UserFunction
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - apigateway.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: AllowLambdaExec
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: lambda:InvokeFunction
+            Resource:
+              Fn::GetAtt:
+              - UserFunction
+              - Arn
 Outputs:
-  ApiEndpoint:
-    Description: Endpoint URL of the API
+  UserAPI:
+    Description: API Gateway endpoint URL to call my first api
     Value:
-      Fn::Sub: https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/
-    Export:
-      Name: MyApiEndpoint
+      Fn::Sub: https://${UserAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/

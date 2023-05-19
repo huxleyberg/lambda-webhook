@@ -1,0 +1,41 @@
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  MyApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: open-api.yaml
+      MethodSettings:
+      - HttpMethod: '*'
+
+  SupportUserCreatedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./cmd/lambda
+      Handler: main
+      Runtime: go1.x
+      Events:
+        SupportUserCreated:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyApiGateway
+            Path: /zendesk
+            Method: POST
+
+  # MyDeployment:
+  #     Type: AWS::ApiGateway::Deployment
+  #     DependsOn: MyApiGateway
+  #     Properties:
+  #       RestApiId: !Ref MyApiGateway
+  #       StageName: dev
+
+Outputs:
+  ApiEndpoint:
+    Description: Endpoint URL of the API
+    Value: !Sub https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/
+    Export:
+      Name: MyApiEndpoint

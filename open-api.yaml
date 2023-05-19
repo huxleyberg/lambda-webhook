@@ -1,77 +1,47 @@
-openapi: 3.0.0
+openapi: "3.0.1"
 info:
-  title: Support User Created Webhook API
-  description: API for handling support user created webhook events
-  version: 1.0.0
+   title: "users-api"
+   description: "Users API"
+   version: "1.0"
 
 paths:
-  /zendesk/webhooks/support-user-created:
-    post:
-      operationId: "CreatePet"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/NewPet"
-        # required: true
-      responses:
-        "200":
-          description: "200 response"
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/NewPetResponse"
-      x-amazon-apigateway-integration:
-        httpMethod: "POST"
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SupportUserCreatedFunction.Arn}/invocations
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        passthroughBehavior: "when_no_match"
-        type: "aws_proxy"
-components:
-  schemas:
-    Pets:
-      type: "array"
-      items:
-        $ref: "#/components/schemas/Pet"
-    Empty:
-      type: "object"
-    NewPetResponse:
-      type: "object"
-      properties:
-        statusCode:
-          type: "integer"
-        body:
-          type: "string"
-    Pet:
-      type: "object"
-      properties:
-        id:
-          type: "integer"
-        type:
-          type: "string"
-        price:
-          type: "number"
-    NewPet:
-      type: "object"
-      properties:
-        type:
-          $ref: "#/components/schemas/PetType"
-        price:
-          type: "number"
-    PetType:
-      type: "string"
-      enum:
-      - "dog"
-      - "cat"
-      - "fish"
-      - "bird"
-      - "gecko"
+
+    /users:
+        post:
+            consumes:
+            - "application/json"
+            produces:
+            - "application/json"
+            responses:
+                "200":
+                    description: "200 response"
+            x-amazon-apigateway-integration:
+                httpMethod: "POST"
+                credentials:
+                    Fn::Sub: ${LambdaExecutionRole.Arn}
+                uri: 
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UserFunction.Arn}/invocations"
+                responses:
+                    default:
+                        statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                type: "aws"
+        get:
+            consumes:
+            - "application/json"
+            produces:
+            - "application/json"
+            responses:
+                "200":
+                    description: "200 response"
+            x-amazon-apigateway-integration:
+                httpMethod: "POST"
+                credentials:
+                    Fn::GetAtt: [LambdaExecutionRole, Arn]
+                uri: 
+                  Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UserFunction.Arn}/invocations"
+                responses:
+                    default:
+                        statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                type: "aws"

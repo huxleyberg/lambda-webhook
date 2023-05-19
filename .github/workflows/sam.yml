@@ -15,7 +15,7 @@ jobs:
 
     env:
         APP_ENV: 'dev'
-        STACK_NAME: 'lambda-web12'
+        STACK_NAME: 'user-api'
 
     steps:
     - name: Checkout code

@@ -1,41 +1,82 @@
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for users API with IaC
+
+Globals:
+    # Enable Logs
+    Api:
+        MethodSettings:
+            - ResourcePath: "/*"
+              HttpMethod: "*"
+              DataTraceEnabled: True
+              LoggingLevel: INFO
+              MetricsEnabled: True
+    Function:
+        Timeout: 360
+        MemorySize: 2048
+        Runtime: go1.x
+
 Resources:
-  MyApiGateway:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: dev
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            Location: open-api.yaml
-      MethodSettings:
-      - HttpMethod: '*'
 
-  SupportUserCreatedFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ./cmd/lambda
-      Handler: main
-      Runtime: go1.x
-      Events:
-        SupportUserCreated:
-          Type: Api
-          Properties:
-            RestApiId: !Ref MyApiGateway
-            Path: /zendesk/webhooks/support-user-created
-            Method: POST
+    # REST API                                                             
+    UserAPI:
+        Type: AWS::Serverless::Api
+        Properties:
+            StageName: dev
+            OpenApiVersion: 3.0.1
+            DefinitionBody: # an OpenApi definition
+                "Fn::Transform":
+                    Name: "AWS::Include"
+                    Parameters:
+                        Location: "open-api.yaml"
+            EndpointConfiguration:
+                Type: REGIONAL
 
-  # MyDeployment:
-  #     Type: AWS::ApiGateway::Deployment
-  #     DependsOn: MyApiGateway
-  #     Properties:
-  #       RestApiId: !Ref MyApiGateway
-  #       StageName: dev
 
+    # Lambda functions                                                    
+    UserFunction:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ./cmd/lambda
+        Handler: main
+        Events:
+          AddUser:
+            Type: Api
+            Properties:
+              RestApiId: !Ref UserAPI
+              Path: /users
+              Method: post
+          GetUsers:
+            Type: Api
+            Properties:
+              RestApiId: !Ref UserAPI
+              Path: /users
+              Method: get
+        
+            
+    # Execution Role
+    LambdaExecutionRole:
+        Type: AWS::IAM::Role
+        Properties:
+            AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Principal:
+                      Service:
+                        - apigateway.amazonaws.com
+                    Action:
+                      - 'sts:AssumeRole'
+            Policies:
+                - PolicyName: AllowLambdaExec
+                  PolicyDocument:
+                    Version: "2012-10-17"
+                    Statement:
+                      - Effect: Allow
+                        Action: 'lambda:InvokeFunction'
+                        Resource: !GetAtt UserFunction.Arn
 Outputs:
-  ApiEndpoint:
-    Description: Endpoint URL of the API
-    Value: !Sub https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/
-    Export:
-      Name: MyApiEndpoint
+  UserAPI:
+    Description: "API Gateway endpoint URL to call my first api"
+    Value: !Sub "https://${UserAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/"
