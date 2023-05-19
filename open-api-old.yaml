@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: Support User Created Webhook API
+  description: API for handling support user created webhook events
+  version: 1.0.0
+
+paths:
+  /zendesk/webhooks/support-user-created:
+    post:
+      summary: Handle support user created webhook events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportUserCreatedRequest'
+      responses:
+        '200':
+          description: OK
+
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SupportUserCreatedFunction.Arn}/invocations
+        httpMethod: POST
+        passthroughBehavior: when_no_match
+        type: aws_proxy
+
+components:
+  schemas:
+    SupportUserCreatedRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        account_id:
+          type: integer
+        id:
+          type: string
+        time:
+          type: string
+          format: date-time
+        zendesk_event_version:
+          type: string
+        subject:
+          type: string
+        detail:
+          $ref: '#/components/schemas/UserDetail'
+        event:
+          $ref: '#/components/schemas/Event'
+      # required:
+      #   - type
+      #   - account_id
+      #   - id
+      #   - time
+      #   - zendesk_event_version
+      #   - subject
+      #   - detail
+      #   - event
+    UserDetail:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+        email:
+          type: string
+        external_id:
+          type: string
+        default_group_id:
+          type: string
+        id:
+          type: string
+        organization_id:
+          type: string
+        role:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      # required:
+      #   - created_at
+      #   - email
+      #   - id
+      #   - role
+      #   - updated_at
+    Event:
+      type: object
+      properties:
+        current:
+          type: boolean
+        previous:
+          type: boolean
+  parameters:
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      required: false
+      schema:
+        type: string
