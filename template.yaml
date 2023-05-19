@@ -11,7 +11,7 @@ Resources:
             Location: open-api.yaml
       MethodSettings:
       - HttpMethod: '*'
-        LoggingLevel: DEBUG
+        LoggingLevel: INFO
         ResourcePath: '/*'
         MetricsEnabled: true
         DataTraceEnabled: true
