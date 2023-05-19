@@ -21,7 +21,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref MyApiGateway
-            Path: /pets
+            Path: /zendesk/webhooks/support-user-created
             Method: POST
 
   # MyDeployment:

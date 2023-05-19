@@ -21,7 +21,7 @@ Resources:
           Properties:
             RestApiId:
               Ref: MyApiGateway
-            Path: /pets
+            Path: /zendesk/webhooks/support-user-created
             Method: POST
     Metadata:
       SamResourceId: SupportUserCreatedFunction
