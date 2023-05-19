@@ -25,7 +25,7 @@ paths:
                     default:
                         statusCode: "200"
                 passthroughBehavior: "when_no_match"
-                type: "aws"
+                type: "aws_proxy"
         get:
             consumes:
             - "application/json"
@@ -37,11 +37,11 @@ paths:
             x-amazon-apigateway-integration:
                 httpMethod: "POST"
                 credentials:
-                    Fn::GetAtt: [LambdaExecutionRole, Arn]
+                    Fn::GetAtt: [LambdaExecutionRole.Arn]
                 uri: 
                   Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UserFunction.Arn}/invocations"
                 responses:
                     default:
                         statusCode: "200"
                 passthroughBehavior: "when_no_match"
-                type: "aws"
+                type: "aws_proxy"
