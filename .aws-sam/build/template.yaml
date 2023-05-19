@@ -18,6 +18,7 @@ Globals:
 Resources:
   UserAPI:
     Type: AWS::Serverless::Api
+    DependsOn: ApiCWLRoleArn
     Properties:
       StageName: dev
       OpenApiVersion: 3.0.1
@@ -28,6 +29,26 @@ Resources:
             Location: ../../open-api.yaml
       EndpointConfiguration:
         Type: REGIONAL
+  ApiCWLRoleArn:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+        - CloudWatchRole
+        - Arn
+  CloudWatchRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: apigateway.amazonaws.com
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
   UserFunction:
     Type: AWS::Serverless::Function
     Properties:
