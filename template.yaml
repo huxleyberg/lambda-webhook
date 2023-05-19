@@ -9,6 +9,12 @@ Resources:
           Name: AWS::Include
           Parameters:
             Location: open-api.yaml
+      MethodSettings:
+      - HttpMethod: '*'
+        LoggingLevel: DEBUG
+        ResourcePath: '/*'
+        MetricsEnabled: true
+        DataTraceEnabled: true
 
   SupportUserCreatedFunction:
     Type: AWS::Serverless::Function
@@ -34,6 +40,6 @@ Resources:
 Outputs:
   ApiEndpoint:
     Description: Endpoint URL of the API
-    Value: !Sub https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/zendesk/webhooks/support-user-created
+    Value: !Sub https://${MyApiGateway}.execute-api.${AWS::Region}.amazonaws.com/dev/
     Export:
       Name: MyApiEndpoint
