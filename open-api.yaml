@@ -37,7 +37,7 @@ paths:
             x-amazon-apigateway-integration:
                 httpMethod: "POST"
                 credentials:
-                    Fn::GetAtt: [LambdaExecutionRole.Arn]
+                    Fn::Sub: ${LambdaExecutionRole.Arn}
                 uri: 
                   Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UserFunction.Arn}/invocations"
                 responses:
