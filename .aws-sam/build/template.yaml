@@ -11,10 +11,6 @@ Resources:
             Location: ../../open-api.yaml
       MethodSettings:
       - HttpMethod: '*'
-        LoggingLevel: INFO
-        ResourcePath: /*
-        MetricsEnabled: true
-        DataTraceEnabled: true
   SupportUserCreatedFunction:
     Type: AWS::Serverless::Function
     Properties:
