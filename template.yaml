@@ -62,8 +62,6 @@ Resources:
       Properties:
         CodeUri: ./cmd/lambda
         Handler: main
-        Architectures:
-        - x86_64
         Events:
           AddUser:
             Type: Api

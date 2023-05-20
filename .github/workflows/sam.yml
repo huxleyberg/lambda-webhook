@@ -37,20 +37,23 @@ jobs:
       run: go mod tidy -go=1.20
 
     - name: Build app with SAM
-      run: sam build
+      run: sam build --use-container
 
-    - name: Package
-      run: |
-        sam package --template-file .aws-sam/build/template.yaml \
-        --s3-bucket ${{ secrets.S3_BUCKET }} \
-        --output-template-file packaged.yaml 
+    # - name: Package
+    #   run: |
+    #     sam package --template-file .aws-sam/build/template.yaml \
+    #     --s3-bucket ${{ secrets.S3_BUCKET }} \
+    #     --output-template-file packaged.yaml 
 
-    - name: Deploy
-      run: |
-        sam deploy --template-file packaged.yaml \
-        --parameter-overrides \
-            Stage=${{ env.APP_ENV }} \
-        --stack-name ${{ env.STACK_NAME }}-${{ env.APP_ENV }} \
-        --capabilities CAPABILITY_IAM \
-        --no-confirm-changeset
+    # - name: Deploy
+    #   run: |
+    #     sam deploy --template-file packaged.yaml \
+    #     --parameter-overrides \
+    #         Stage=${{ env.APP_ENV }} \
+    #     --stack-name ${{ env.STACK_NAME }}-${{ env.APP_ENV }} \
+    #     --capabilities CAPABILITY_IAM \
+    #     --no-confirm-changeset
+
+    - name: Deploy SAM on AWS
+      run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name sam-users-api-container --s3-bucket ${{ secrets.S3_BUCKET }} --capabilities CAPABILITY_IAM --region us-east-1 
 
