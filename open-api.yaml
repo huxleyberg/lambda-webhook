@@ -20,7 +20,8 @@ paths:
                 uri: 
                   Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UserFunction.Arn}/invocations"
                 passthroughBehavior: "when_no_match"
-                type: "aws"
+                type: "aws_proxy"
+                
         get:
             produces:
             - "application/json"
@@ -34,4 +35,4 @@ paths:
                 uri: 
                   Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UserFunction.Arn}/invocations"
                 passthroughBehavior: "when_no_match"
-                type: "aws"
+                type: "aws_proxy"
