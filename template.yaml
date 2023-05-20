@@ -13,7 +13,7 @@ Globals:
               LoggingLevel: INFO
               MetricsEnabled: True
     Function:
-        Timeout: 3600
+        Timeout: 900
         MemorySize: 2048
         Runtime: go1.x
         
