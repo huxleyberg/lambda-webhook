@@ -33,12 +33,37 @@ func GetAllUsersHandler() http.HandlerFunc {
 
 	}
 }
-
 func AddUserHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		SendJson(w, http.StatusOK, map[string]interface{}{"message": "Users added successfully", "statusCode": 200})
 	}
 }
+
+// func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
+// 	users := []struct {
+// 		ID        string `json:"id"`
+// 		Firstname string `json:"first_name"`
+// 		Lastname  string `json:"last_name"`
+// 	}{
+// 		{
+// 			ID:        "435564bggfh345",
+// 			Firstname: "john",
+// 			Lastname:  "Doe",
+// 		},
+// 		{
+// 			ID:        "435564bggfh345",
+// 			Firstname: "john",
+// 			Lastname:  "Doe",
+// 		},
+// 	}
+
+// 	SendJson(w, http.StatusOK, users)
+
+// }
+
+// func AddUserHandler(w http.ResponseWriter, r *http.Request) {
+// 	SendJson(w, http.StatusOK, map[string]interface{}{"message": "Users added successfully", "statusCode": 200})
+// }
 
 // setCacheHeaders sets the cache headers for a given response
 func setCacheHeaders(w http.ResponseWriter) {

@@ -7,9 +7,8 @@ import (
 )
 
 type App struct {
-	AddUserHandler     http.HandlerFunc
-	GetUsersHandler    http.HandlerFunc
-	GetUserByIdHandler http.HandlerFunc
+	AddUserHandler  http.HandlerFunc
+	GetUsersHandler http.HandlerFunc
 }
 
 func (a *App) Handler() http.HandlerFunc {
